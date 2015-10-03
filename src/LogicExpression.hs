@@ -133,7 +133,7 @@ inv = factor <|> do
   NotExpr <$> inv
 
 factor :: Parser Expr
-factor = lit <|> variable <|> between (char '(') (char ')') tauimp
+factor = lit <|> variable <|> between (char '(') (char ')') dualimp
 
 lit :: Parser Expr
 lit = Lit <$> ((char '0' *> return False) <|> (char '1' *> return True))
