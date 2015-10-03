@@ -8,7 +8,7 @@ import qualified Data.Map as M
 import           Prelude hiding (and, or)
 
 data Expr 
-  = TauimpExpr Expr Expr
+  = DualimpExpr Expr Expr
   | ImpExpr    Expr Expr
   | OrExpr     Expr Expr
   | XorExpr    Expr Expr
@@ -63,7 +63,7 @@ nf exp = (dnf, cnf)
 
 eval :: Expr -> M.Map String Bool -> Bool
 eval exp env = case exp of
-  TauimpExpr a b -> eval a env == eval b env
+  DualimpExpr a b -> eval a env == eval b env
   ImpExpr    a b -> not (eval a env) || eval b env
   OrExpr     a b -> eval a env || eval b env
   XorExpr    a b -> eval a env /= eval b env
@@ -81,7 +81,7 @@ vars exp = nub $ vars' exp []
   where
     nub = map head . group . sort
     vars' exp xs = case exp of
-      TauimpExpr a b -> go a b
+      DualimpExpr a b -> go a b
       ImpExpr    a b -> go a b
       OrExpr     a b -> go a b
       XorExpr    a b -> go a b
@@ -93,11 +93,11 @@ vars exp = nub $ vars' exp []
             go' a = vars' a xs
 
 expr :: Parser Expr
-expr = tauimp <* eof
+expr = dualimp <* eof
 
-tauimp :: Parser Expr
-tauimp = imp `chainl1` tauimpOp where
-  tauimpOp = string "<->" >> return TauimpExpr
+dualimp :: Parser Expr
+dualimp = imp `chainl1` dualimpOp where
+  dualimpOp = string "<->" >> return DualimpExpr
 
 imp :: Parser Expr
 imp = or `chainl1` impOp where
