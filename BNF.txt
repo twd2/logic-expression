@@ -1,11 +1,11 @@
 ! ~ & ^ | && ^^ || -> <->
 
-expr : tauimp_expr
+expr : dualimp_expr
 
-tauimp_expr : imp_expr tauimp_rest
+dualimp_expr : imp_expr dualimp_rest
 
-tauimp_rest : OPTAUIMP imp_expr tauimp_rest
-            | eps
+dualimp_rest : OPDUALIMP imp_expr dualimp_rest
+             | eps
 
 imp_expr : or_expr imp_rest
          
